@@ -23,3 +23,6 @@ node_modules/
 *.tsbuildinfo
 data/
 **/data/
+local-backups/*.key.txt
+!local-backups/
+!local-backups/*.aes
