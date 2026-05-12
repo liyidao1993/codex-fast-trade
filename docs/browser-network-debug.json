@@ -1,0 +1,51 @@
+{
+  "ok": true,
+  "loginStatus": 200,
+  "uiMessage": "连接成功：合约实盘，可交易=true，资产=11，持仓=720",
+  "network": [
+    {
+      "requestId": "15460.40",
+      "method": "GET",
+      "url": "http://127.0.0.1:18081/api/v1/settings/binance-key",
+      "status": 200,
+      "statusText": "OK",
+      "mimeType": "application/json",
+      "fromDiskCache": false,
+      "body": "{\"code\":0,\"data\":{\"configured\":true,\"exchange\":\"binance\",\"env\":\"mainnet\",\"env_label\":\"币安合约实盘\",\"base_url\":\"https://fapi.binance.com\",\"mainnet_confirmed\":true,\"id\":1,\"label\":\"币安合约实盘\",\"key_masked\":\"GDts...YTul\",\"created_at\":\"2026-05-11T16:12:49\"},\"msg\":\"\"}"
+    },
+    {
+      "requestId": "15460.41",
+      "method": "POST",
+      "url": "http://127.0.0.1:18081/api/v1/settings/binance-key/test",
+      "status": 200,
+      "statusText": "OK",
+      "mimeType": "application/json",
+      "fromDiskCache": false,
+      "body": "{\"code\":0,\"data\":{\"connected\":true,\"can_trade\":true,\"fee_tier\":0,\"assets\":11,\"positions\":720,\"env\":\"mainnet\",\"base_url\":\"https://fapi.binance.com\"},\"msg\":\"\"}"
+    },
+    {
+      "requestId": "15460.42",
+      "method": "GET",
+      "url": "http://127.0.0.1:18081/api/v1/settings/binance-key",
+      "status": 200,
+      "statusText": "OK",
+      "mimeType": "application/json",
+      "fromDiskCache": false,
+      "body": "{\"code\":0,\"data\":{\"configured\":true,\"exchange\":\"binance\",\"env\":\"mainnet\",\"env_label\":\"币安合约实盘\",\"base_url\":\"https://fapi.binance.com\",\"mainnet_confirmed\":true,\"id\":1,\"label\":\"币安合约实盘\",\"key_masked\":\"GDts...YTul\",\"created_at\":\"2026-05-11T16:12:49\"},\"msg\":\"\"}"
+    }
+  ],
+  "consoleLogs": [
+    {
+      "type": "debug",
+      "args": "[vite] connecting..."
+    },
+    {
+      "type": "info",
+      "args": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+    },
+    {
+      "type": "debug",
+      "args": "[vite] connected."
+    }
+  ]
+}

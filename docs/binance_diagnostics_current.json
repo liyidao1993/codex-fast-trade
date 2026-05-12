@@ -1,0 +1,122 @@
+{
+  "environment": {
+    "frontend": "http://127.0.0.1:18081",
+    "backend": "http://127.0.0.1:18080",
+    "database_url": "sqlite+aiosqlite:///D:/AI/JY20026/codex-fast-trade/data/app.db",
+    "configured_base": "https://testnet.binancefuture.com",
+    "key": {
+      "configured": false,
+      "masked": "",
+      "label": "",
+      "created_at": ""
+    }
+  },
+  "results": [
+    {
+      "base_url": "https://testnet.binancefuture.com",
+      "checks": {
+        "time": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "serverTime": 1778513246523
+          }
+        },
+        "exchangeInfo": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "symbols": 705,
+            "first": "BTCUSDT"
+          }
+        },
+        "bookTicker": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "symbol": "BTCUSDT",
+            "bidPrice": "81089.50",
+            "askPrice": "81175.10"
+          }
+        },
+        "ticker24hr": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "symbol": "BTCUSDT",
+            "lastPrice": "81097.40",
+            "quoteVolume": "120981836030.61"
+          }
+        },
+        "account": {
+          "ok": false,
+          "status": "missing_key",
+          "detail": "no saved api key"
+        },
+        "positionRisk": {
+          "ok": false,
+          "status": "missing_key",
+          "detail": "no saved api key"
+        },
+        "openOrders": {
+          "ok": false,
+          "status": "missing_key",
+          "detail": "no saved api key"
+        }
+      }
+    },
+    {
+      "base_url": "https://demo-fapi.binance.com",
+      "checks": {
+        "time": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "serverTime": 1778513247965
+          }
+        },
+        "exchangeInfo": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "symbols": 705,
+            "first": "BTCUSDT"
+          }
+        },
+        "bookTicker": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "symbol": "BTCUSDT",
+            "bidPrice": "81112.10",
+            "askPrice": "81175.10"
+          }
+        },
+        "ticker24hr": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "symbol": "BTCUSDT",
+            "lastPrice": "81097.40",
+            "quoteVolume": "120981836030.61"
+          }
+        },
+        "account": {
+          "ok": false,
+          "status": "missing_key",
+          "detail": "no saved api key"
+        },
+        "positionRisk": {
+          "ok": false,
+          "status": "missing_key",
+          "detail": "no saved api key"
+        },
+        "openOrders": {
+          "ok": false,
+          "status": "missing_key",
+          "detail": "no saved api key"
+        }
+      }
+    }
+  ]
+}

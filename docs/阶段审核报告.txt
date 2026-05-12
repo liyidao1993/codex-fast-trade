@@ -1,0 +1,152 @@
+Codex Fast Trade 阶段审核报告
+日期：2026-05-11
+工作区：D:\AI\JY20026\codex-fast-trade
+
+一、隔离边界
+
+1. 本阶段所有实现、测试、文档、运行文件均位于 codex-fast-trade。
+2. 未改动 D:\AI\JY20026\binance-fast-trade，避免和 Kiro 目录互相覆盖。
+3. 上层规划 TXT 仅作为输入参考，不作为实现文件写入。
+
+二、已完成范围
+
+1. 后端骨架
+   - FastAPI 应用已建立。
+   - 已实现 GET /healthz、GET /readyz。
+   - SQLite async 已接入，并在启动时开启 WAL。
+   - 已建立 system_state、api_keys、orders、order_events、guard_rules、protection_orders、monitor_rules、monitor_events、strategies、strategy_runs、ai_trade_drafts 等表模型。
+
+2. 认证与基础 API
+   - 已实现 PIN 登录、登出、会话 Cookie。
+   - 已实现市场币种、持仓、普通下单、浮动价挂单、订单保护、快捷平仓/反手、监控、策略、AI 草稿等 API 分组。
+   - 涉及真实执行的高风险动作使用二次 PIN 确认。
+
+3. 币安接入
+   - 已实现 Binance REST 薄封装：exchangeInfo、bookTicker、24h ticker、账户、持仓、订单查询、下单、撤单、listenKey。
+   - 主网默认不可用；必须显式配置 BINANCE_ENABLE_MAINNET=true 且 BINANCE_CONFIRM_MAINNET=true。
+   - 无 API Key 时，依赖私有接口的测试/调用按预期跳过或报配置错误。
+
+4. 精度与护栏
+   - 已实现 Decimal 精度模块，覆盖 tickSize、stepSize、minNotional。
+   - 交易计算不使用 float 作为金额、价格、数量的核心计算类型。
+   - 护栏仅保留硬性订单边界：symbol 白名单、notional、quantity、leverage、reduceOnly 等。
+   - 未实现熔断、日亏损熔断、全局自动暂停策略模块，符合“快速交易、轻量化”的产品目标。
+
+5. 快速交易能力
+   - 已实现普通订单与快速浮动价挂单。
+   - 浮动价挂单支持按盘口 bid/ask 加 tick 偏移生成 LIMIT 价格。
+   - 已实现成交后自动挂 TP/SL 的后端处理核心。
+   - 已实现 chase 决策核心与单步追价执行模块。
+   - 已实现 reconcile 核对本地订单与交易所订单的基础能力。
+
+6. 监控、策略、AI 交易基础
+   - 已实现自定义监控规则模型与 API。
+   - 已实现基于 Binance 24h ticker 的成交量、成交额、涨跌幅、成交笔数等监控指标评估。
+   - 已实现策略模型、策略运行记录、grid / ma_cross / ai_signal 的轻量 runner。
+   - 策略强制要求 stoploss_config，避免无止损策略运行。
+   - 策略可 dry-run，也可通过 PIN 确认后执行一次。
+   - AI 交易目前只生成 draft，不直接下单，避免把外部 AI 输出直接接入真实交易执行链路。
+
+7. 前端
+   - 已建立 Vite React 单页工具界面。
+   - 首屏是交易工作台，不是营销页。
+   - 已集成 TradingView Widget 作为视觉图表。
+   - 前端交易、监控、策略、AI 草稿面板已接入后端 API。
+   - TradingView 仅用于图表显示；交易、监控、策略决策仍以 Binance 数据为准。
+
+8. W6 轻量后台任务
+   - 已实现进程内 monitor worker，可周期扫描启用的监控规则。
+   - 已实现进程内 strategy worker，可周期 dry-run 或在显式配置后 live run。
+   - 已实现 Binance user-stream worker，可通过 listenKey WebSocket 接收订单更新并复用订单事件处理核心。
+   - 已新增 GET /api/v1/workers/status，用于查看 worker enabled/running/iterations/last_error。
+   - 所有 worker 默认关闭，需要在 .env 中显式启用。
+
+9. W7 活动工作台
+   - 已实现订单列表、订单事件、监控事件、策略运行记录查询接口。
+   - 已实现保护单状态查询接口，并纳入活动流。
+   - 已实现本地告警表，监控触发时生成 alert，不触发熔断或暂停。
+   - 已实现订单撤单接口，实际撤单走 Binance，并要求二次 PIN。
+   - 已新增 GET /api/v1/activity/recent 聚合活动流，前端只需轮询一个接口。
+   - 前端右侧活动面板已接入聚合活动流，展示本地订单、保护单、告警、监控、策略运行动态。
+   - 前端新增持仓快照面板，使用 Binance account positions。
+   - 保持 TradingView 仅用于图表显示，活动流来自本地数据库与 Binance 驱动的后端流程。
+
+10. W8 AI 接入
+   - 已实现 AI provider 抽象，默认 AI_PROVIDER=mock，不依赖外部 LLM Key。
+   - 已实现 POST /api/v1/ai/analyze，可基于 Binance ticker 生成本地 AI draft。
+   - 已实现 AI draft validate/approve 工作流。
+   - AI draft 执行必须满足 confidence、hard guard、sl_pct 和二次 PIN。
+   - execute=false 只批准 draft，不下单；execute=true 才走已有浮动价挂单路径。
+   - AI 不直接绕过 guard、PIN 或 Binance 数据链路。
+
+11. W9 Testnet 配置入口
+   - 已实现浏览器 Settings 面板，可录入 Binance Futures Testnet API Key/Secret。
+   - 已实现 GET/PUT/DELETE /api/v1/settings/binance-key。
+   - 已实现 POST /api/v1/settings/binance-key/test，用保存的 Key 测试 account 连接。
+   - 持仓、下单、撤单、浮动挂单、保护单、close-all、reverse、workers 均优先使用页面保存的 Testnet Key。
+   - 用户不再需要编辑 .env 才能跑 testnet 验收。
+
+三、本轮验证结果
+
+1. 后端测试
+   - 命令：uv run --python 3.11 --with-editable . --extra dev pytest -q
+   - 结果：58 passed。
+
+2. 后端静态检查
+   - 命令：uv run --python 3.11 --with-editable . --extra dev ruff check app
+   - 结果：All checks passed。
+
+3. 前端构建
+   - 命令：npm run build
+   - 结果：TypeScript 编译与 Vite build 通过。
+
+4. 服务冒烟
+   - 后端：http://127.0.0.1:18080
+   - 前端：http://127.0.0.1:18081
+   - GET /healthz 返回 ok。
+   - GET /readyz 返回 ready。
+   - 前端入口返回 HTTP 200。
+
+5. 边界扫描
+   - 扫描 circuit、熔断、daily_loss、risk_service、pause all、自动暂停、Redis、Celery、K8s。
+   - 代码中未发现熔断或重型架构模块。
+   - 命中仅存在于 README/W1 文档中，用于声明“不做熔断/不做自动暂停”。
+
+四、审核结论
+
+当前实现符合本阶段目标：隔离开发、轻量后端、快速交易基础、订单级 TP/SL、浮动价挂单、监控/策略/AI 交易入口已经打通，W6 的轻量后台持续运行底座、W7 的活动工作台第一版和 W8 的 AI draft 工作流也已经完成。
+
+当前实现还不是完整生产交易系统，适合作为 W1-W5 原型与 testnet 验证底座。下一阶段应优先补齐持续运行能力，而不是扩展复杂风控或重型中间件。
+
+五、当前缺口
+
+1. 监控已有后台定时扫描，尚未实现告警分发。
+2. 策略已有后台周期扫描、运行记录和活动展示，尚未实现完整运行状态面板、参数热更新和历史收益指标。
+3. User Data Stream 已有 WebSocket 常驻消费者，尚未做断线后的细粒度事件回补。
+4. AI 交易目前是 draft 机制，尚未接入真实 LLM Provider、信号评分、人工确认工作流。
+5. 前端活动流已有第一版，缺少重试动作、保护单失败后的手动重挂入口和更高密度筛选。
+6. 真实 Binance testnet 下单需要配置 API Key 后再做端到端验收。
+
+六、下一步开工建议
+
+1. W7 后续：补齐交易工作台
+   - 订单重试动作、保护单失败后的手动重挂入口。
+   - 快速撤单、全撤、平仓、反手动作保留二次 PIN。
+
+2. W8：AI 接入
+   - AI 只输出结构化 draft。
+   - draft 必须经本地 guard、精度取整、人工/PIN 确认后才能转为订单。
+   - 保留审计日志，记录 AI 输入摘要、输出、人工确认时间。
+
+3. W9：Testnet 真实验收
+   - 配置 Binance Testnet Key。
+   - 验证 LIMIT/MARKET、浮动价挂单、TP/SL、撤单、reconcile。
+   - 验证所有交易金额、价格、数量链路均为 Decimal。
+
+七、保持不做
+
+1. 不做熔断。
+2. 不做日亏损自动暂停。
+3. 不做全局策略自动停机。
+4. 不引入 Redis、Celery、K8s 作为当前阶段依赖。
+5. 不让 TradingView 数据参与交易决策。

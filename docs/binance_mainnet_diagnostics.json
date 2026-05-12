@@ -1,0 +1,102 @@
+{
+  "environment": {
+    "frontend": "http://127.0.0.1:18081",
+    "backend": "http://127.0.0.1:18080",
+    "database_url": "sqlite+aiosqlite:///D:/AI/JY20026/codex-fast-trade/data/app.db",
+    "configured_base": "https://demo-fapi.binance.com",
+    "active_env": "mainnet",
+    "key": {
+      "configured": true,
+      "masked": "GDts...YTul",
+      "label": "币安合约实盘",
+      "created_at": "2026-05-11 16:12:49"
+    }
+  },
+  "results": [
+    {
+      "base_url": "https://fapi.binance.com",
+      "checks": {
+        "time": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "serverTime": 1778524789584
+          }
+        },
+        "exchangeInfo": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "symbols": 720,
+            "first": "BTCUSDT"
+          }
+        },
+        "bookTicker": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "symbol": "BTCUSDT",
+            "bidPrice": "81938.80",
+            "askPrice": "81938.90"
+          }
+        },
+        "ticker24hr": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "symbol": "BTCUSDT",
+            "lastPrice": "81950.10",
+            "quoteVolume": "12686897757.15"
+          }
+        },
+        "account": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "canTrade": true,
+            "assets": 11,
+            "positions": 720
+          }
+        },
+        "positionRisk": {
+          "ok": true,
+          "status": 200,
+          "detail": [
+            {
+              "symbol": "BTCUSDT",
+              "positionAmt": "0.000",
+              "entryPrice": "0.0",
+              "breakEvenPrice": "0.0",
+              "markPrice": "81947.65363043",
+              "unRealizedProfit": "0.00000000",
+              "liquidationPrice": "0",
+              "leverage": "20",
+              "maxNotionalValue": "100000000",
+              "marginType": "cross",
+              "isolatedMargin": "0.00000000",
+              "isAutoAddMargin": "false",
+              "positionSide": "BOTH",
+              "notional": "0",
+              "isolatedWallet": "0",
+              "updateTime": 1776588163160,
+              "isolated": false,
+              "adlQuantile": 0
+            }
+          ]
+        },
+        "openOrders": {
+          "ok": true,
+          "status": 200,
+          "detail": []
+        },
+        "listenKey": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "listenKey": true
+          }
+        }
+      }
+    }
+  ]
+}

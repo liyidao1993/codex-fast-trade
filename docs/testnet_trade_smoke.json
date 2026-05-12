@@ -1,0 +1,13 @@
+{
+  "base_url": "https://demo-fapi.binance.com",
+  "symbol": "BTCUSDT",
+  "execute": false,
+  "steps": [
+    {
+      "name": "load_key",
+      "ok": false,
+      "detail": "no saved Binance testnet key"
+    }
+  ],
+  "key_masked": ""
+}
