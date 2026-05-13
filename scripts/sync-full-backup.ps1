@@ -17,10 +17,12 @@ if ($Async) {
     if (-not [string]::IsNullOrWhiteSpace($Branch)) { $argsList += @("-Branch", $Branch) }
     if ($SkipLocalState) { $argsList += "-SkipLocalState" }
     if ($IncludeDependencyCaches) { $argsList += "-IncludeDependencyCaches" }
-    $log = Join-Path (Split-Path -Parent $PSCommandPath) "..\local-backups\sync-full-backup.last.log"
-    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $log) | Out-Null
-    Start-Process powershell.exe -ArgumentList $argsList -WindowStyle Hidden -RedirectStandardOutput $log -RedirectStandardError $log
-    Write-Host "Started async backup sync. Log: $log"
+    $logDir = Join-Path (Split-Path -Parent $PSCommandPath) "..\local-backups"
+    $outLog = Join-Path $logDir "sync-full-backup.last.out.log"
+    $errLog = Join-Path $logDir "sync-full-backup.last.err.log"
+    New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+    Start-Process powershell.exe -ArgumentList $argsList -WindowStyle Hidden -RedirectStandardOutput $outLog -RedirectStandardError $errLog
+    Write-Host "Started async backup sync. Logs: $outLog ; $errLog"
     exit 0
 }
 
